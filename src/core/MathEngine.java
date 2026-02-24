@@ -13,6 +13,10 @@ public class MathEngine {
     private final Map<String, Double> variables = new HashMap<>();
     private final List<Double> table = new ArrayList<>();
 
+    public MathEngine() {
+        variables.put("ans", 0.0);
+    }
+
     public double calculate(String expression) {
         // Step 1: Lexing
         Lexer lexer = new Lexer(expression);
@@ -23,7 +27,10 @@ public class MathEngine {
         List<Token> postfix = parser.infixToPostfix();
 
         // Step 3: Evaluating
-        return Evaluator.evaluate(postfix, variables, table);
+        double ans = Evaluator.evaluate(postfix, variables, table);
+        variables.put("ans", ans);
+
+        return ans;
     }
 
     public void setVariable(String name, double value) {

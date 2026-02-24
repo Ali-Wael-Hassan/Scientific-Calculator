@@ -40,7 +40,12 @@ public class Evaluator {
         binaryOps.put(TokenType.PLUS, (a, b) -> a + b);
         binaryOps.put(TokenType.MINUS, (a, b) -> a - b);
         binaryOps.put(TokenType.MULTIPLY, (a, b) -> a * b);
-        binaryOps.put(TokenType.DIVIDE, (a, b) -> a / b);
+        binaryOps.put(TokenType.DIVIDE, (a, b) -> {
+            if (b == 0) {
+                throw new ArithmeticException("Division by zero");
+            }
+            return a / b;
+        });
         binaryOps.put(TokenType.POWER, Math::pow);
 
         // 3 Stat
