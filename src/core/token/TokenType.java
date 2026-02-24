@@ -1,0 +1,31 @@
+package core.token;
+
+public enum TokenType {
+    NUMBER,
+    PLUS,
+    MINUS,
+    MULTIPLY,
+    DIVIDE,
+    POWER,
+    SIN,
+    COS,
+    TAN,
+    ASIN,
+    ACOS,
+    ATAN,
+    SQRT,
+    LOG,
+    MEAN,
+    MEDIAN,
+    MODE,
+    PVARIANCE,
+    PSTD_DEV,
+    SVARIANCE,
+    SSTD_DEV,
+    IDENTIFIER,
+    UNARY_MINUS,
+    POSTFIX,
+    LPAREN,
+    RPAREN,
+    EOF
+}
