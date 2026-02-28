@@ -24,31 +24,49 @@ public class Evaluator {
     private static Map<TokenType, TableOperation> statOps = new HashMap<>();
 
     static {
-        // 1 Parameter
         unaryOps.put(TokenType.SIN, Math::sin);
         unaryOps.put(TokenType.COS, Math::cos);
-        unaryOps.put(TokenType.TAN, Math::tan);
-        unaryOps.put(TokenType.ASIN, Math::asin);
-        unaryOps.put(TokenType.ACOS, Math::acos);
+        unaryOps.put(TokenType.TAN, a -> {
+            double mod = Math.abs(a % Math.PI);
+            if (Math.abs(mod - Math.PI / 2) < 1e-10) return Double.NaN;
+            return Math.tan(a);
+        });
+        
+        unaryOps.put(TokenType.ASIN, a -> (a < -1 || a > 1) ? Double.NaN : Math.asin(a));
+        unaryOps.put(TokenType.ACOS, a -> (a < -1 || a > 1) ? Double.NaN : Math.acos(a));
         unaryOps.put(TokenType.ATAN, Math::atan);
-        unaryOps.put(TokenType.SQRT, Math::sqrt);
-        unaryOps.put(TokenType.LOG, Math::log10);
+        unaryOps.put(TokenType.ABS, Math::abs);
+        
+        unaryOps.put(TokenType.SINH, Math::sinh);
+        unaryOps.put(TokenType.COSH, Math::cosh);
+        unaryOps.put(TokenType.TANH, Math::tanh);
+        
+        unaryOps.put(TokenType.ASINH, a -> Math.log(a + Math.sqrt(a * a + 1)));
+        unaryOps.put(TokenType.ACOSH, a -> (a < 1) ? Double.NaN : Math.log(a + Math.sqrt(a * a - 1)));
+        unaryOps.put(TokenType.ATANH, a -> (a <= -1 || a >= 1) ? Double.NaN : 0.5 * Math.log((1 + a) / (1 - a)));
+        
+        unaryOps.put(TokenType.SQRT, a -> (a < 0) ? Double.NaN : Math.sqrt(a));
+        unaryOps.put(TokenType.LOG, a -> (a <= 0) ? Double.NaN : Math.log10(a));
+        unaryOps.put(TokenType.LN, a -> (a <= 0) ? Double.NaN : Math.log(a));
+        unaryOps.put(TokenType.LOG2, a -> (a <= 0) ? Double.NaN : Math.log(a) / Math.log(2));
+        
+        unaryOps.put(TokenType.EXP, Math::exp);
+        unaryOps.put(TokenType.TEN_POW, a -> Math.pow(10, a));
         unaryOps.put(TokenType.UNARY_MINUS, a -> -a);
-        unaryOps.put(TokenType.POSTFIX, Evaluator::factorial);
+        unaryOps.put(TokenType.POSTFIX, a -> (a < 0) ? Double.NaN : Evaluator.factorial(a));
 
-        // 2 Parameter
         binaryOps.put(TokenType.PLUS, (a, b) -> a + b);
         binaryOps.put(TokenType.MINUS, (a, b) -> a - b);
         binaryOps.put(TokenType.MULTIPLY, (a, b) -> a * b);
-        binaryOps.put(TokenType.DIVIDE, (a, b) -> {
-            if (b == 0) {
-                throw new ArithmeticException("Division by zero");
-            }
-            return a / b;
+        binaryOps.put(TokenType.DIVIDE, (a, b) -> (b == 0) ? Double.NaN : a / b);
+        
+        binaryOps.put(TokenType.POWER, (a, b) -> {
+            if (a < 0 && b % 1 != 0) return Double.NaN;
+            return Math.pow(a, b);
         });
-        binaryOps.put(TokenType.POWER, Math::pow);
+        
+        binaryOps.put(TokenType.MODULO, (a, b) -> (b == 0) ? Double.NaN : a % b); 
 
-        // 3 Stat
         statOps.put(TokenType.MEAN, Evaluator::Mean);
         statOps.put(TokenType.MEDIAN, Evaluator::Median);
         statOps.put(TokenType.MODE, Evaluator::Mode);

@@ -13,8 +13,14 @@ public class MathEngine {
     private final Map<String, Double> variables = new HashMap<>();
     private final List<Double> table = new ArrayList<>();
 
+    private static final MathEngine INSTANCE = new MathEngine();
+
     public MathEngine() {
         variables.put("ans", 0.0);
+    }
+
+    public static MathEngine getInstance() {
+        return INSTANCE;
     }
 
     public double calculate(String expression) {

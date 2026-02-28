@@ -15,12 +15,28 @@ public class Lexer {
     public static final Map<String, TokenType> STAT_KEYWORDS = new TreeMap<>();
     public static final Map<String, Double> CONSTANTS = new TreeMap<>();
 
-    static {
+   static {
         KEYWORDS.put("sin", TokenType.SIN);
         KEYWORDS.put("cos", TokenType.COS);
         KEYWORDS.put("tan", TokenType.TAN);
+        KEYWORDS.put("asin", TokenType.ASIN);
+        KEYWORDS.put("acos", TokenType.ACOS);
+        KEYWORDS.put("atan", TokenType.ATAN);
+        
+        KEYWORDS.put("sinh", TokenType.SINH);
+        KEYWORDS.put("cosh", TokenType.COSH);
+        KEYWORDS.put("tanh", TokenType.TANH);
+
+        KEYWORDS.put("asinh", TokenType.ASINH);
+        KEYWORDS.put("acosh", TokenType.ACOSH);
+        KEYWORDS.put("atanh", TokenType.ATANH);
+
         KEYWORDS.put("sqrt", TokenType.SQRT);
-        KEYWORDS.put("log", TokenType.LOG);
+        KEYWORDS.put("logten", TokenType.LOG);
+        KEYWORDS.put("log",   TokenType.LN);
+        KEYWORDS.put("logtwo",  TokenType.LOG2);
+        KEYWORDS.put("exp",   TokenType.EXP);
+        KEYWORDS.put("abs",   TokenType.ABS);
         
         STAT_KEYWORDS.put("mean", TokenType.MEAN);
         STAT_KEYWORDS.put("median", TokenType.MEDIAN);
@@ -31,7 +47,7 @@ public class Lexer {
         STAT_KEYWORDS.put("sstddev", TokenType.SSTD_DEV);
 
         CONSTANTS.put("pi", Math.PI);
-        CONSTANTS.put("e", Math.E);
+        CONSTANTS.put("e",  Math.E);
     }
 
     public Lexer(String input) {
@@ -118,6 +134,7 @@ public class Lexer {
             case '/' -> new Token(TokenType.DIVIDE, "/");
             case '^' -> new Token(TokenType.POWER, "^");
             case '!' -> new Token(TokenType.POSTFIX, "!");
+            case '%' -> new Token(TokenType.MODULO, "%");
             default -> throw new IllegalArgumentException("Unexpected operator: " + ch);
         };
     }
@@ -141,7 +158,7 @@ public class Lexer {
     }
 
     private boolean isOperator(char ch) {
-        return (ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '^' || ch == '!');
+        return (ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '^' || ch == '!' || ch == '%');
     }
 
     private boolean isIdentifierStart(char ch) {

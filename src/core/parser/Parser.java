@@ -91,7 +91,7 @@ public class Parser {
     }
 
     private boolean shouldPop(Token current, Token top) {
-        if (top.getType() == TokenType.LPAREN) return false;
+        if (top.getType() == TokenType.LPAREN || current.getType() == TokenType.UNARY_MINUS) return false;
 
         int p1 = getPrecedence(current.getType());
         int p2 = getPrecedence(top.getType());
@@ -110,7 +110,7 @@ public class Parser {
     private boolean isOperator(TokenType type) {
         return type == TokenType.PLUS || type == TokenType.MINUS || 
                type == TokenType.MULTIPLY || type == TokenType.DIVIDE || 
-               type == TokenType.POWER || type == TokenType.UNARY_MINUS;
+               type == TokenType.POWER || type == TokenType.UNARY_MINUS || type == TokenType.MODULO;
     }
 
     private boolean isFunction(TokenType type) {
@@ -119,10 +119,10 @@ public class Parser {
 
     private int getPrecedence(TokenType type) {
         return switch (type) {
-            case POSTFIX -> 5;
-            case POWER -> 4;
-            case UNARY_MINUS -> 3;
-            case MULTIPLY, DIVIDE -> 2;
+            case POSTFIX -> 6;
+            case POWER -> 5;
+            case UNARY_MINUS -> 4;
+            case MULTIPLY, DIVIDE, MODULO -> 3;
             case PLUS, MINUS -> 1;
             default -> 0;
         };
