@@ -5,7 +5,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class ResultPanel extends JPanel {
-    private JLabel expression; // Fixed typo
+    private JLabel expression;
     private BloomLabel result;
     
     public ResultPanel() {

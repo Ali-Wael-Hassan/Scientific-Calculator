@@ -16,7 +16,6 @@ public class Histogram extends JPanel {
     private final Color BAR_BORDER = Color.decode("#00d9ff");
     private final int BINS = 10;
 
-    // View State Variables
     private double viewMin, viewMax, viewRange;
     private double rawMin, rawMax, rawRange;
     private int maxFreq;
@@ -31,7 +30,6 @@ public class Histogram extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         
-        // 1. Validation & Pre-processing
         List<Double> validData = table.stream()
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
@@ -41,13 +39,11 @@ public class Histogram extends JPanel {
             return;
         }
 
-        // 2. Prepare Math & Bounds
         calculateBoundsAndFrequencies(validData);
 
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // 3. Sequential Drawing
         drawGrid(g2);
         drawAxis(g2);
         drawData(g2);
@@ -55,23 +51,16 @@ public class Histogram extends JPanel {
         g2.dispose();
     }
 
-    /**
-     * Calculates the raw data range, applies the 0.15 buffer for the view, 
-     * and sorts data into frequency bins.
-     */
     private void calculateBoundsAndFrequencies(List<Double> data) {
-        // Raw Data Bounds
         this.rawMin = data.stream().min(Double::compare).orElse(0.0);
         this.rawMax = data.stream().max(Double::compare).orElse(1.0);
         this.rawRange = Math.max(0.1, rawMax - rawMin);
 
-        // View Bounds (15% Padding)
         double buffer = rawRange * 0.15;
         this.viewMin = rawMin - buffer;
         this.viewMax = rawMax + buffer;
         this.viewRange = viewMax - viewMin;
 
-        // Frequency Binning
         this.counts = new int[BINS];
         double binSize = rawRange / BINS;
         for (double val : data) {
@@ -137,13 +126,11 @@ public class Histogram extends JPanel {
         int w = getWidth() - 2 * PADDING;
         int h = getHeight() - 2 * PADDING;
         
-        // Width of one bin relative to the buffered view
         double barWidthPx = (rawRange / BINS) / viewRange * w;
 
         for (int i = 0; i < BINS; i++) {
             int barH = (int) (((double) counts[i] / maxFreq) * h);
             
-            // Map raw data start point to buffered pixel space
             double binStartVal = rawMin + (i * (rawRange / BINS));
             double xRatio = (binStartVal - viewMin) / viewRange;
             int pixelX = PADDING + (int)(xRatio * w);

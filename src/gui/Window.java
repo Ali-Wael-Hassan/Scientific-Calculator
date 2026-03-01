@@ -36,7 +36,7 @@ public class Window extends JFrame {
             b.setFocusPainted(false);
             b.setBorderPainted(true);
             b.setContentAreaFilled(false);
-            b.setRolloverEnabled(false); 
+            b.setRolloverEnabled(false);
             
             b.setCursor(new Cursor(Cursor.HAND_CURSOR));
             b.addActionListener(e -> showPage(tab));
